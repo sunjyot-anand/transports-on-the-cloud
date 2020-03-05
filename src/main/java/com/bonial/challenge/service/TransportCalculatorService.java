@@ -1,11 +1,16 @@
 package com.bonial.challenge.service;
 
 import com.bonial.challenge.model.Transport;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.simple.JSONObject;
 
 public class TransportCalculatorService {
 
   private Transport transport;
+
+  @Getter
+  @Setter
   private Integer totalPassengerCapacity;
 
   public TransportCalculatorService(Transport transport, Integer totalPassengerCapacity){
@@ -23,14 +28,6 @@ public class TransportCalculatorService {
 
   public Transport getTransportType(){
     return transport;
-  }
-
-  public Integer getTotalPassengerCapacity() {
-    return this.totalPassengerCapacity;
-  }
-
-  public void setTotalPassengerCapacity(Integer totalPassengerCapacity) {
-    this.totalPassengerCapacity = totalPassengerCapacity;
   }
 
 }

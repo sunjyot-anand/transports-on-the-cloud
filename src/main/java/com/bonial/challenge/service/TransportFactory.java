@@ -5,10 +5,12 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import lombok.extern.log4j.Log4j;
 import org.json.simple.JSONObject;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
+@Log4j
 @Component
 public class TransportFactory {
 
@@ -17,11 +19,11 @@ public class TransportFactory {
   static final String delimitedTrainKeysSorted = "model;number-wagons;w-passenger-capacity";
   static final String delimitedPlaneKeysSorted = "b-passenger-capacity;e-passenger-capacity;model";
 
-  public TransportCalculatorService getTransportType(JSONObject transportJSONRecord, Logger log, Map<String, TransportCalculatorService> transportServicesMap){
+  public TransportCalculatorService getTransportType(JSONObject transportJSONRecord, Map<String, TransportCalculatorService> transportServicesMap){
     Set<String> JSONKeys = new TreeSet<String>(transportJSONRecord.keySet());
     String JSONKeysString = String.join(";",JSONKeys);
 
-    log.info("Keys String" + JSONKeysString);
+    log.info("Keys String : " + JSONKeysString);
 
     switch (JSONKeysString){
       case delimitedCarKeysSorted:

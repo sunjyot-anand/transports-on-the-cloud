@@ -11,21 +11,18 @@ import com.bonial.challenge.service.TransportCalculatorService;
 import java.util.*;
 
 import com.bonial.challenge.utility.AWSRecordUtil;
+import lombok.extern.log4j.Log4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.json.simple.parser.JSONParser;
 
 import java.util.function.Function;
 
+@Log4j
 @Component
 public class FileUploadHandler implements Function <S3EventNotification, String> {
 
-
-    static final Logger log = LoggerFactory.getLogger(FileUploadHandler.class);
     List<TransportCalculatorService> transportCalculatorServices;
     private TransportFactory transportFactory;
     private AWSRecordUtil awsRecordUtil;
@@ -54,12 +51,12 @@ public class FileUploadHandler implements Function <S3EventNotification, String>
             transportsArray.forEach(currentTransportRecord -> computeCapacity((JSONObject) currentTransportRecord, transportServicesMap));
             logPassengerCapacity(transportServicesMap);
             awsRecordUtil.uploadResult(record,transportServicesMap);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             if (partnerFileContents.isEmpty() && awsRecordUtil.isFolderCreationNotification(record)){
                 log.info("Folder was created for partner. Lambda was invoked but no summary files were uploaded.");
             }
             else
-                log.info("Invalid input received. Please provide valid input.");
+                throw new IllegalArgumentException("File uploaded is malformed. Please provide valid input.");
         }
     }
 
@@ -76,7 +73,7 @@ public class FileUploadHandler implements Function <S3EventNotification, String>
     }
 
     private void computeCapacity(JSONObject transportJSONRecord, Map<String,TransportCalculatorService> transportServicesMap){
-        TransportCalculatorService transportCalculatorService = transportFactory.getTransportType(transportJSONRecord, log, transportServicesMap);
+        TransportCalculatorService transportCalculatorService = transportFactory.getTransportType(transportJSONRecord, transportServicesMap);
         transportCalculatorService.computePassengerCapacity(transportJSONRecord);
     }
 

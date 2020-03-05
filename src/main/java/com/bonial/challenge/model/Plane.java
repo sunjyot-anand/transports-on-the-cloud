@@ -15,4 +15,9 @@ public class Plane implements Transport {
     return ((Long)transportJSONRecord.get(B_PASSENGER_CAPACITY)).intValue()+((Long)transportJSONRecord.get(E_PASSENGER_CAPACITY)).intValue();
   }
 
+  @Override
+  public String toString() {
+    return TransportName.PLANE.name();
+  }
+
 }

@@ -14,4 +14,8 @@ public class Car implements Transport {
     return ((Long)transportJSONRecord.get(PASSENGER_CAPACITY)).intValue();
   }
 
+  @Override
+  public String toString() {
+    return TransportName.CAR.name();
+  }
 }

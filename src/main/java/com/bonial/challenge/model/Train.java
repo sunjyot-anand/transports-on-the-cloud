@@ -15,4 +15,9 @@ public class Train implements Transport {
     return ((Long)transportJSONRecord.get(NUMBER_WAGONS)).intValue()*((Long)transportJSONRecord.get(W_PASSENGER_CAPACITY)).intValue();
   }
 
+  @Override
+  public String toString() {
+    return TransportName.TRAIN.name();
+  }
+
 }

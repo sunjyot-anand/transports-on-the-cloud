@@ -35,7 +35,7 @@ Steps :
 ### Configuring the jar to be used by the Lambda Function
 
 Navigate to Lambda -> Functions -> FunctionName and in the Configuration tab, in the "Function Code" section,
-- Input "com.test.AWSLambdaHandler" as Handler.
+- Input "com.bonial.challenge.AWSLambdaHandler" as Handler.
 - Set Runtime to Java 8.
 - Select "transports-on-the-cloud-1.0.0.jar" from target folder created after building the project for Function Package.
 

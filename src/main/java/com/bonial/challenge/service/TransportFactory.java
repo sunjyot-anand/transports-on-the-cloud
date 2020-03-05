@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransportFactory {
 
-  //NOTE: these are sorted keys for each type of transport JSON delimited with ;
+  //NOTE: these are sorted keys for each type of transport JSON delimited with ";"
   static final String delimitedCarKeysSorted = "manufacturer;model;passenger-capacity";
   static final String delimitedTrainKeysSorted = "model;number-wagons;w-passenger-capacity";
   static final String delimitedPlaneKeysSorted = "b-passenger-capacity;e-passenger-capacity;model";
@@ -23,7 +23,7 @@ public class TransportFactory {
     Set<String> JSONKeys = new TreeSet<String>(transportJSONRecord.keySet());
     String JSONKeysString = String.join(";",JSONKeys);
 
-    log.info("Keys String : " + JSONKeysString);
+    log.debug("Keys of transport JSON delimited with \";\" : " + JSONKeysString);
 
     switch (JSONKeysString){
       case delimitedCarKeysSorted:

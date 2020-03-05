@@ -35,7 +35,8 @@ public class FileUploadHandler implements Function <S3EventNotification, String>
 
     @Override
     public String apply(S3EventNotification s3EventNotification) {
-        log.info("Lambda function is invoked:" + s3EventNotification.toJson());
+        log.info("Lambda function is invoked");
+        log.debug("S3 Event Notification which triggered the Lambda : " + s3EventNotification.toJson());
         s3EventNotification.getRecords().forEach(record -> processInputRecord(record));
         return "OK";
     }
@@ -47,7 +48,7 @@ public class FileUploadHandler implements Function <S3EventNotification, String>
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(partnerFileContents);
             JSONArray transportsArray = (JSONArray) jsonObject.get("transports");
-            initializeCounters(transportServicesMap); // Resets counters in case multiple files are uploaded
+            initializeCounters(transportServicesMap); // Resets counters before each record in case multiple files are uploaded
             transportsArray.forEach(currentTransportRecord -> computeCapacity((JSONObject) currentTransportRecord, transportServicesMap));
             logPassengerCapacity(transportServicesMap);
             awsRecordUtil.uploadResult(record,transportServicesMap);
@@ -67,9 +68,9 @@ public class FileUploadHandler implements Function <S3EventNotification, String>
     }
 
     private void logPassengerCapacity(Map<String,TransportCalculatorService> transportServicesMap) {
-        log.info("total car passengers : " + transportServicesMap.get(TransportName.CAR.name()).getTotalPassengerCapacity());
-        log.info("total train passengers : " + transportServicesMap.get(TransportName.TRAIN.name()).getTotalPassengerCapacity());
-        log.info("total plane passengers : " + transportServicesMap.get(TransportName.PLANE.name()).getTotalPassengerCapacity());
+        log.info("Total car passengers : " + transportServicesMap.get(TransportName.CAR.name()).getTotalPassengerCapacity());
+        log.info("Total train passengers : " + transportServicesMap.get(TransportName.TRAIN.name()).getTotalPassengerCapacity());
+        log.info("Total plane passengers : " + transportServicesMap.get(TransportName.PLANE.name()).getTotalPassengerCapacity());
     }
 
     private void computeCapacity(JSONObject transportJSONRecord, Map<String,TransportCalculatorService> transportServicesMap){

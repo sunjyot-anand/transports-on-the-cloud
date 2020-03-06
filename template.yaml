@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM yaml file to test Transports on the cloud.
+Resources:
+  TransportsOnTheCloudLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.bonial.challenge.AWSLambdaHandler
+      Runtime: java8
+      CodeUri: ./target/transports-on-the-cloud-1.0.0.jar
+      Timeout: 300
+      Events:
+        PutResource:
+          Type: Api
+          Properties:
+            Path: /
+            Method: put

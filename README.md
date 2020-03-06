@@ -1,9 +1,10 @@
 # Transports on the cloud
 Transport company is tracking mobility records on their partners using JSON files and storing them on S3. Each file that a partner uploads on S3 contains up to 100 records of up to 3 different transport types: cars, trains and planes.
 
-## Project Structure and Run Instructions
+## Run Instructions
 
 The application is built using Spring Boot and contains a project named "transports-on-the-cloud", which is a Java 8 Maven project.
+The properties file needs to be updated and `aws.accesskey`, `aws.secretkey` and `aws.region` should be set correctly(By default its takes credentials for my personal test bucket on S3)
 
 To compile the project, run the following command :
 
@@ -11,7 +12,7 @@ To compile the project, run the following command :
 
 This command will build the project and also run all tests.
 
-### Creating a Lambda Function which is triggered on s3 Object creation triggers
+### Creating a Lambda function which is triggered on S3 Object creation
 
 Prerequisites :
 - Having an AWS account with access to AWS Lambda, S3 and CloudWatch(for logs)
@@ -43,17 +44,36 @@ Save this Configuration by clicking on the "Save" button on the top right hand s
 
 You are ready to start uploading Files for processing now!!
 
-## Uploading files to S3
+### Uploading files to S3
 
-Upload relevant files to `records` folder and `PARTNER ID` sub folder in the configured S3 Bucket.
+Upload relevant files to `records` folder and `PARTNER_ID` sub folder in the configured S3 Bucket.
 
-Note : Creation of sub folders for new Partner IDs will also trigger the Lambda Function. However, No summary files will be uploaded for this trigger and the Logs will reflect this with the message : <br/>
-"Folder was created for partner. Lambda was invoked but no summary files were uploaded." 
+Note : Creation of empty sub directories for new Partner IDs will also trigger the Lambda Function. However, No summary files will be uploaded for this trigger and the Logs will reflect this with the message : <br/>
+"Folder was created for partner. Lambda was invoked but no summary files were uploaded."
 
-## Checking result summary files from S3
+For files which do not conform to the schema for Transport records or basic JSON formatting, an IllegalArgumentException will be thrown which will log that a malformed file was uploaded. No summary files will be uploaded
 
-For every file uploaded in the `records/partnerID` folder, a summary file with the same name but suffixed with "-summary" will be created in the `summary/partnerID` folder.
+### Checking result summary files from S3
 
-**This achieves the following two bonus tasks <br/>
-"store the summarize file in same bucket using path /summary/partnerId" <br/>
-"processing multiple partners"**
+For every file uploaded in the `records/PARTNER_ID/` folder, a summary file with the same name but suffixed with "-summary" will be created in the `summary/PARTNER_ID/` folder. 
+This enables processing for multiple partners. Every partner will have a folder in the `records/` folder and another folder in the `summary/` folder. 
+
+## Bonus tasks
+The aforementioned setup achieves the following two bonus tasks:
+
+***1. Store the summarize file in same bucket using path /summary/partnerId <br/>
+2. Processing multiple partners***
+
+### For the third Bonus task : ***Locally Testing the Lambda Function with SAM***
+
+Prerequisites :
+- Docker installed locally (I have used `Docker version 19.03.5, build 633a0ea`)
+- SAM installed locally (I have used `sam version 0.2.11`)
+
+Navigate to Project home directory and run:
+
+```sam local generate-event s3 put --bucket S3_BUCKET_NAME --key TEST_FILE_NAME | sam local invoke TransportsOnTheCloudLambda```
+
+The result of the Lambda will be printed to Logs and summary file will be uploaded to S3 in same bucket as the Test file.
+
+Note: The Bucket `S3_BUCKET_NAME` should be already created on S3(No special permissions need to be set or regions need to be specified)

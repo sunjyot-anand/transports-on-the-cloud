@@ -69,6 +69,7 @@ Here, you will find a log group "/aws/lambda/FUNCTION_NAME". All logs for Lambda
 
 
 ## Bonus tasks
+
 The aforementioned setup achieves the following two bonus tasks:
 
 ***1. Store the summarize file in same bucket using path /summary/partnerId <br/>
@@ -89,10 +90,3 @@ Navigate to Project home directory and run:
 The result of the Lambda will be printed to Logs and summary file will be uploaded to S3 in same bucket as the Test file. The path of the test file should be an absolute path with respect to the bucket.
 
 Note: The Bucket `S3_BUCKET_NAME` should be already created on S3(No special permissions need to be set or regions need to be specified)
-
-## Troubleshooting
-
-Assuming that the Lambda Fuction and its trigger have been created on AWS, if the logs show failure of our Spring Boot Application, an easy way would be to turn debug level logs on and check the request the Lambda is receiving. <br/>
-This will also print keys for all Transport records to Logs.
-
-In case the failure still persists please feel free to reach out to me : sunjyotsinghanand@gmail.com
